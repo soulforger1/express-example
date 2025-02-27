@@ -1,18 +1,15 @@
-import fs from 'fs';
+import { UserModel } from '../../models/user.model.js';
+import bcrypt from 'bcrypt';
 
-export const createUser = (req, res) => {
-    const rawUserData = fs.readFileSync('src/db/users.json');
-    const users = JSON.parse(rawUserData);
+export const createUser = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const encryptedPassword = await bcrypt.hash(password, 10);
 
-    users.push(req.body);
+        await UserModel.create({ email, password: encryptedPassword });
 
-    fs.writeFileSync('src/db/users.json', JSON.stringify(users));
-
-    res.json({ message: 'Success' })
+        res.json({ message: 'Success' })
+    } catch (err) {
+        res.status(403).json({ message: "Error occured" });
+    }
 }
-// CRUD
-
-// CREATE
-// READ
-// UPDATE
-// DELETE

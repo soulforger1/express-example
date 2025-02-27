@@ -1,20 +1,19 @@
-import fs from 'fs';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt'
+import { UserModel } from '../../models/user.model.js';
 
-export const login = (req, res) => {
-    const { username, password } = req.body;
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await UserModel.findOne({ email });
 
-    const rawUserData = fs.readFileSync('src/db/users.json');
-    const users = JSON.parse(rawUserData);
+        if (!user) return res.json({ message: "Username or Password did not match" })
+        if (!bcrypt.compareSync(password, user.password)) return res.json({ message: "Username or Password did not match" })
 
-    const user = users.find((cur) => cur.username === username);
+        var token = jwt.sign({ _id: user._id, role: user.role }, 'uneheer nuuts')
 
-    if (!user) return res.json({ message: "Username or Password did not match" })
-    if (user.password !== password) return res.json({ message: "Username or Password did not match" })
-
-    var token = jwt.sign(user, 'uneheer nuuts')
-
-    res.json({ token: token })
+        res.json({ token: token })
+    } catch (err) {
+        res.status(403).json({ message: "Error occured" });
+    }
 }
-
-// jwt, middleware

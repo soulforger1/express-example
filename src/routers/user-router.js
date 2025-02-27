@@ -5,11 +5,12 @@ import { deleteUser } from '../controller/users/delete-user.js';
 import { updateUser } from '../controller/users/update-user.js';
 import { login } from '../controller/users/login.js';
 import { authorizationMiddleware } from '../middleware/authorization.js';
+import { validateEmailMiddleware } from '../middleware/validateEmail.js';
 
 export const userRouter = express.Router();
 
-userRouter.get('/', authorizationMiddleware, getUsers)
-userRouter.post('/', createUser)
-userRouter.put('/', authorizationMiddleware, updateUser)
-userRouter.delete('/', authorizationMiddleware, deleteUser)
-userRouter.post('/login', login)
+userRouter.get('/', authorizationMiddleware, getUsers);
+userRouter.post('/', validateEmailMiddleware, createUser);
+userRouter.put('/', authorizationMiddleware, updateUser);
+userRouter.delete('/', authorizationMiddleware, deleteUser);
+userRouter.post('/login', validateEmailMiddleware, login);

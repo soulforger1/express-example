@@ -13,10 +13,3 @@ export const authorizationMiddleware = (req, res, next) => {
         return res.json({ message: "unauthorized!!!" })
     }
 }
-
-// 1. Create login => return token
-// 2. Send login request from postman => get token
-// 3. Put token in header of new request from postman(thunder)
-// 4. Write authorizationMiddleware
-// 5. Check token on middleware
-// 6. Put authorizationMiddleware on getUsers
