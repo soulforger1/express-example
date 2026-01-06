@@ -18,4 +18,5 @@ app.use("/category", categoryRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`);
+  console.log("1");
 });
